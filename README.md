@@ -1,52 +1,225 @@
-# MERN Stack Capstone Project
+# ⚖️ LawBridge
 
-This assignment focuses on designing, developing, and deploying a comprehensive full-stack MERN application that showcases all the skills you've learned throughout the course.
+**Kenya’s Legal Case Access Platform** — LawBridge is a secure, full-stack MERN application designed to help users create, view, and manage legal cases, built for clarity, accessibility, and deployment readiness. It features authentication, theming, routing, responsive UI, and is hosted with CI/CD workflows on Vercel and Render.
 
-## Assignment Overview
+---
 
-You will:
-1. Plan and design a full-stack MERN application
-2. Develop a robust backend with MongoDB, Express.js, and Node.js
-3. Create an interactive frontend with React.js
-4. Implement testing across the entire application
-5. Deploy the application to production
+## 🚀 Tech Stack Overview
 
-## Getting Started
+| Layer       | Technology                          |
+|-------------|--------------------------------------|
+| Frontend    | React (JSX), React Query, Axios      |
+| Styling     | Styled-Components, ThemeProvider     |
+| Backend     | Express.js, Node.js                  |
+| Database    | MongoDB Atlas                        |
+| Auth        | JWT                                  |
+| Deployment  | Vercel (client) + Render (server)    |
+| DevOps      | GitHub Actions (CI/CD)               |
+| Monitoring  | Render Healthchecks, Sentry-ready    |
+| Testing     | Jest, Supertest, Testing Library     |
 
-1. Accept the GitHub Classroom assignment
-2. Clone the repository to your local machine
-3. Follow the instructions in the `Week8-Assignment.md` file
-4. Plan, develop, and deploy your capstone project
+---
 
-## Files Included
+## 🗂️ Folder Structure
 
-- `Week8-Assignment.md`: Detailed assignment instructions
+```
+lawbridge/
+├── client/
+│   ├── src/
+│   │   ├── api/          # Axios client & React Query hooks
+│   │   ├── components/   # UI components & Theme toggle
+│   │   ├── pages/        # Routed views
+│   │   ├── styles/       # global.js, theme.js
+│   │   ├── utils/        # token/auth helpers
+│   │   └── __tests__/    # Frontend unit tests
+│   ├── public/           # Static assets
+│   └── vercel.json       # Vercel config
+│
+├── server/
+│   ├── controllers/      # Logic per route
+│   ├── models/           # MongoDB schemas
+│   ├── routes/           # Express endpoints
+│   ├── middleware/       # Auth, validation
+│   ├── tests/            # Backend test suite
+│   └── render.yaml       # Render deployment config
+│
+└── .github/
+    └── workflows/        # CI/CD pipelines
+```
 
-## Requirements
+---
 
-- Node.js (v18 or higher)
-- MongoDB (local installation or Atlas account)
-- npm or yarn
-- Git and GitHub account
-- Accounts on deployment platforms (Render/Vercel/Netlify/etc.)
+## 📚 Features
 
-## Project Ideas
+- 🔐 JWT Authentication & Protected Routes
+- 🎨 Light/Dark Mode Toggle (Header)
+- 💾 Theme Persistence via `localStorage`
+- 🧠 System Theme Detection (`matchMedia`)
+- 🚦 Health Check Endpoint (`/health`)
+- ⚡ React Query + Axios Data Fetching
+- 🧪 Test Scaffolding (frontend/backend)
+- 🛠 CI/CD: GitHub Actions → Vercel & Render
+- 📑 Deployment-Ready Environment Handling
+- 🌍 Responsive Design
 
-The `Week8-Assignment.md` file includes several project ideas, but you're encouraged to develop your own idea that demonstrates your skills and interests.
+---
 
-## Submission
+## 🧠 Technical Architecture
 
-Your project will be automatically submitted when you push to your GitHub Classroom repository. Make sure to:
+```text
+                      ┌──────────────┐
+                      │ MongoDB Atlas│
+                      └─────┬────────┘
+                            │
+                     ┌──────▼───────┐
+                     │ Express Server│
+                     │ /auth /cases  │
+                     └──────┬────────┘
+                            │ JWT
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│ React Frontend (Vercel)                                │
+│ - Protected Routes: /dashboard, /cases                 │
+│ - Theme Toggle + System Detection                      │
+│ - Axios + React Query integration                      │
+│ - Styled Components w/ ThemeProvider                   │
+└────────────────────────────────────────────────────────┘
+```
 
-1. Commit and push your code regularly
-2. Include comprehensive documentation
-3. Deploy your application and add the live URL to your README.md
-4. Create a video demonstration and include the link in your README.md
+---
 
-## Resources
+## 🧰 Setup Instructions
 
-- [MongoDB Documentation](https://docs.mongodb.com/)
-- [Express.js Documentation](https://expressjs.com/)
-- [React Documentation](https://react.dev/)
-- [Node.js Documentation](https://nodejs.org/en/docs/)
-- [GitHub Classroom Guide](https://docs.github.com/en/education/manage-coursework-with-github-classroom) 
+### 🖥 Local Dev
+
+```bash
+git clone https://github.com/your-org/lawbridge.git
+
+# Backend
+cd server
+cp .env.example .env
+npm install
+npm run dev
+
+# Frontend
+cd ../client
+cp .env.local.example .env.local
+npm install
+npm start
+```
+
+### 🔐 `.env` Files
+
+#### `client/.env.local`
+
+```env
+REACT_APP_API_URL=https://lawbridge-api.onrender.com
+```
+
+#### `server/.env`
+
+```env
+MONGO_URI=your-mongodb-uri
+JWT_SECRET=your-secret
+PORT=5000
+NODE_ENV=production
+```
+
+---
+
+## 🧪 Testing
+
+### ✅ Frontend: `__tests__/`
+
+- `Header.test.js`: checks navigation rendering
+- Use Jest + @testing-library/react
+
+### ✅ Backend: `tests/`
+
+- `auth.test.js`: register/login flow
+- Use Jest + Supertest
+
+Run with:
+
+```bash
+npm test
+```
+
+---
+
+## 🌐 API Reference
+
+| Method | Endpoint           | Description              | Auth |
+|--------|--------------------|--------------------------|------|
+| POST   | `/auth/register`   | Create new user          | ❌   |
+| POST   | `/auth/login`      | Login existing user      | ❌   |
+| GET    | `/cases`           | Retrieve user cases      | ✅   |
+| POST   | `/cases`           | Submit new case          | ✅   |
+| GET    | `/health`          | Check server status      | ❌   |
+
+---
+
+## 🧭 Deployment Strategy
+
+### ✅ Vercel (Frontend)
+
+- Root: `client/`
+- `vercel.json`:
+
+```json
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "build",
+  "framework": "create-react-app"
+}
+```
+
+### ✅ Render (Backend)
+
+- Uses `render.yaml`
+- Health check: `/health`
+
+### 🤖 GitHub Actions
+
+- On push to `client/` → Trigger Vercel
+- On push to `server/` → Trigger Render
+
+```yaml
+# frontend.yml
+run: curl -X POST ${{ secrets.VERCEL_DEPLOY_HOOK }}
+
+# backend.yml
+run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+```
+
+---
+
+## 📜 User Guide
+
+1. Visit `https://lawbridge.vercel.app`
+2. Register and login
+3. Access dashboard and submit cases
+4. Use theme toggle to switch UI appearance
+5. All data persists and is securely transmitted via JWT
+
+---
+
+## 🎓 Presentation Overview
+
+| Slide | Content                                  |
+|-------|-------------------------------------------|
+| 🚀    | Title + Capstone Context                 |
+| 🧩    | Problem Statement + Target Users         |
+| 🛠️    | Stack: MERN + CI/CD + Axios + Theming    |
+| 🎥    | Demo: case creation, login, theme toggle |
+| ⚙️    | Challenges Overcome                      |
+| 🧠    | Learnings & Next Steps                   |
+
+---
+
+## 📄 License & Attribution
+
+This project is open-source for educational and portfolio purposes.  
+Please credit LawBridge in any redistributed work.
+
+---
